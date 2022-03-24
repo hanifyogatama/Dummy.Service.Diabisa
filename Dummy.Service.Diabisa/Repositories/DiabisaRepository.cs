@@ -22,6 +22,42 @@ namespace Dummy.Service.Diabisa.Repositories
             myContext = Context;
         }
 
+        public DiabisaItem CreateDiabisa(DiabisaItem create_param)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spAddDiabisa";
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add(new SqlParameter("method", create_param.method));
+                    cmd.Parameters.Add(new SqlParameter("method_details", create_param.method_details));
+                    cmd.Parameters.Add(new SqlParameter("period", create_param.period));
+                    cmd.Parameters.Add(new SqlParameter("value", create_param.value));
+                    cmd.Parameters.Add(new SqlParameter("target", create_param.target));
+        
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return create_param;
+        }
+
         public IEnumerable<DiabisaItem> GetAll_diabisa()
         {
             DataSet dt = new DataSet();

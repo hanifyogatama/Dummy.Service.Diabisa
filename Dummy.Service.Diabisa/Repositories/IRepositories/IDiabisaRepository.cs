@@ -8,6 +8,7 @@ namespace Dummy.Service.Diabisa.Repositories.IRepositories
 {
     interface IDiabisaRepository
     {
+        DiabisaItem CreateDiabisa(DiabisaItem create_param);
         IEnumerable<DiabisaItem> GetAll_diabisa();
     }
 }

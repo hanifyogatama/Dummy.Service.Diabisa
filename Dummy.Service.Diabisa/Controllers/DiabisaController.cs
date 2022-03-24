@@ -11,10 +11,56 @@ using System.Threading.Tasks;
 
 namespace Dummy.Service.Diabisa.Controllers
 {
- 
+
     public class DiabisaController : BaseController
     {
         public DiabisaController(IUnitOfWork unitOfWork) : base(unitOfWork) { }
+
+        [HttpPost("AddDiabisa")]
+        [ProducesResponseType(typeof(ResponseData<DiabisaItem>), 200)]
+        public IActionResult Register(DiabisaItem create_param)
+        {
+
+            int total = 0;
+
+            if (create_param == null)
+            {
+                HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
+                goto response;
+            }
+
+            try
+            {
+                var result = IUnitOfWorks.UnifOfWork_ms_diabisa().CreateDiabisa(create_param);
+                if (result != null)
+                {
+                    HttpResults = new ResponseData<DiabisaItem>("Data successfully created", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, create_param);
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                int exCode = ex.HResult;
+
+                if (exCode == -2147467259)
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, ex.Message, total);
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, ex.Message, total);
+                }
+            }
+
+        response:
+            return HttpResponse(HttpResults);
+
+        }
+
 
         [HttpGet("GetAllDiabisa")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<DiabisaItem>>), 200)]
@@ -53,5 +99,7 @@ namespace Dummy.Service.Diabisa.Controllers
 
             return HttpResponse(HttpResults);
         }
+
+
     }
 }
