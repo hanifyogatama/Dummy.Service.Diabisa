@@ -1,5 +1,6 @@
 ﻿using Dummy.Service.Diabisa.Common;
 using Dummy.Service.Diabisa.Models;
+using Dummy.Service.Diabisa.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Siloam.System.Data;
@@ -16,9 +17,9 @@ namespace Dummy.Service.Diabisa.Controllers
     {
         public DiabisaController(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        [HttpPost("AddDiabisa")]
-        [ProducesResponseType(typeof(ResponseData<DiabisaItem>), 200)]
-        public IActionResult Register(DiabisaItem create_param)
+        [HttpPost("CreateDiabisa")]
+        [ProducesResponseType(typeof(ResponseData<ParamCreateDiabisa>), 200)]
+        public IActionResult Register([FromBody] ParamCreateDiabisa create_param)
         {
 
             int total = 0;
@@ -34,7 +35,7 @@ namespace Dummy.Service.Diabisa.Controllers
                 var result = IUnitOfWorks.UnifOfWork_ms_diabisa().CreateDiabisa(create_param);
                 if (result != null)
                 {
-                    HttpResults = new ResponseData<DiabisaItem>("Data successfully created", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, create_param);
+                    HttpResults = new ResponseData<ParamCreateDiabisa>("Data successfully created", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, create_param);
                 }
                 else
                 {

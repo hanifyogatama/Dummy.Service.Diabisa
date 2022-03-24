@@ -1,5 +1,6 @@
 ﻿using Dummy.Service.Diabisa.Common;
 using Dummy.Service.Diabisa.Models;
+using Dummy.Service.Diabisa.Models.ViewModels;
 using Dummy.Service.Diabisa.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Dummy.Service.Diabisa.Repositories
             myContext = Context;
         }
 
-        public DiabisaItem CreateDiabisa(DiabisaItem create_param)
+        public ParamCreateDiabisa CreateDiabisa(ParamCreateDiabisa create_param)
         {
             DataTable dt = new DataTable();
 
@@ -39,6 +40,7 @@ namespace Dummy.Service.Diabisa.Repositories
                     cmd.Parameters.Add(new SqlParameter("method_details", create_param.method_details));
                     cmd.Parameters.Add(new SqlParameter("period", create_param.period));
                     cmd.Parameters.Add(new SqlParameter("value", create_param.value));
+                    cmd.Parameters.Add(new SqlParameter("status", create_param.status));
                     cmd.Parameters.Add(new SqlParameter("target", create_param.target));
         
 
@@ -86,6 +88,7 @@ namespace Dummy.Service.Diabisa.Repositories
                                   method_details = dr["method_details"].ToString(),
                                   period = dr["period"].ToString(),
                                   value = (int)dr["value"],
+                                  status = dr["status"].ToString(),
                                   target = dr["target"].ToString(),
                                   check_date = dr["check_date"].ToString(),
                                   check_time = dr["check_time"].ToString(),

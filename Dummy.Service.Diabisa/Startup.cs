@@ -36,12 +36,13 @@ namespace Dummy.Service.Diabisa
             {
                 c.SwaggerDoc("v2.0", new Info
                 {
-                    Title = "Quanyu Hospitals Service Lasa",
+                    Title = "Dummies Hospitals Service ",
                     Version = "v1.0",
-                    Description = "Build on the .NET Core 2.2"
+                    Description = "Tanpa tedeng aling aling"
                 });
             });
 
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -55,7 +56,7 @@ namespace Dummy.Service.Diabisa
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Dummy Hospitals Service");
+                c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Dummies Hospitals Service");
             });
 
 
