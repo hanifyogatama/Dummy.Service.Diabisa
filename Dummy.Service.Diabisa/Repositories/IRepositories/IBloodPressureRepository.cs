@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Dummy.Service.Diabisa.Repositories.IRepositories
 {
-    interface IDiabisaRepository
+    interface IBloodPressureRepository
     {
-        ParamCreateDiabisa CreateDiabisa(ParamCreateDiabisa create_param);
-        IEnumerable<DiabisaItem> GetAll_diabisa();
+        IEnumerable<BloodPressureItem> GetAll_BloodPressure();
+        IEnumerable<BloodPressureItem> Filter_BloodPressure_ByDate(ParamFilterDateRange param_date);
     }
 }

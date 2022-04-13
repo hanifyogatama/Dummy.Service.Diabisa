@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Dummy.Service.Diabisa.Models.ViewModels
 {
-    public class ParamCreateDiabisa
+    public class ParamAddBloodGlucose
     {
+        // add blood glucose data
         public string method { get; set; }
         public string method_details { get; set; }
         public string period { get; set; }

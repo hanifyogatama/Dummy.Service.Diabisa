@@ -38,7 +38,7 @@ namespace Dummy.Service.Diabisa
                 {
                     Title = "Dummies Hospitals Service ",
                     Version = "v1.0",
-                    Description = "Tanpa tedeng aling aling"
+                    Description = "Tanpo tedeng aling aling"
                 });
             });
 

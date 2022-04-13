@@ -8,6 +8,7 @@ namespace Dummy.Service.Diabisa.Common
 {
     public interface IUnitOfWork : IDisposable
     {
-        DiabisaRepository UnifOfWork_ms_diabisa();
+        BloodGlucoseRepository UnifOfWork_ms_BloodGlucose();
+        BloodPressureRepository UnifOfWork_ms_BloodPressure();
     }
 }

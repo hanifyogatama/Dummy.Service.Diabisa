@@ -10,21 +10,32 @@ namespace Dummy.Service.Diabisa.Common
     {
         internal DatabaseContext Context;
 
-        private DiabisaRepository Diabisa_Repository;
+        private BloodGlucoseRepository BloodGlucose_Repository;
+        private BloodPressureRepository BloodPressure_Repository;
 
         public UnitOfWork(DatabaseContext _Context)
         {
             Context = _Context;
         }
 
-        public DiabisaRepository UnifOfWork_ms_diabisa()
+        public BloodGlucoseRepository UnifOfWork_ms_BloodGlucose()
         {
-            if (Diabisa_Repository == null)
+            if (BloodGlucose_Repository == null)
             {
-                Diabisa_Repository = new DiabisaRepository(Context);
+                BloodGlucose_Repository = new BloodGlucoseRepository(Context);
             }
 
-            return Diabisa_Repository;
+            return BloodGlucose_Repository;
+        }
+
+        public BloodPressureRepository UnifOfWork_ms_BloodPressure()
+        {
+            if (BloodPressure_Repository == null)
+            {
+                BloodPressure_Repository = new BloodPressureRepository(Context);
+            }
+
+            return BloodPressure_Repository;
         }
 
         public bool Disposing;
@@ -52,5 +63,7 @@ namespace Dummy.Service.Diabisa.Common
             Disposed(true);
             GC.SuppressFinalize(this);
         }
+
+       
     }
 }

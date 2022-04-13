@@ -11,59 +11,21 @@ using System.Threading.Tasks;
 
 namespace Dummy.Service.Diabisa.Repositories
 {
-    public class DiabisaRepository : DatabaseConfig, IDiabisaRepository
+    public class BloodPressureRepository : DatabaseConfig, IBloodPressureRepository
     {
-
         private readonly DatabaseContext myContext;
 
-        public DiabisaRepository() : base() { }
+        public BloodPressureRepository() : base() { }
 
-        public DiabisaRepository(DatabaseContext Context) : base(Context)
+        public BloodPressureRepository(DatabaseContext Context) : base(Context)
         {
             myContext = Context;
         }
 
-        public ParamCreateDiabisa CreateDiabisa(ParamCreateDiabisa create_param)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
-                {
-                    con.Open();
-                    SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "spAddDiabisa";
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add(new SqlParameter("method", create_param.method));
-                    cmd.Parameters.Add(new SqlParameter("method_details", create_param.method_details));
-                    cmd.Parameters.Add(new SqlParameter("period", create_param.period));
-                    cmd.Parameters.Add(new SqlParameter("value", create_param.value));
-                    cmd.Parameters.Add(new SqlParameter("status", create_param.status));
-                    cmd.Parameters.Add(new SqlParameter("target", create_param.target));
-        
-
-                    using (var da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                    }
-
-                    con.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return create_param;
-        }
-
-        public IEnumerable<DiabisaItem> GetAll_diabisa()
+        public IEnumerable<BloodPressureItem> GetAll_BloodPressure()
         {
             DataSet dt = new DataSet();
-            IEnumerable<DiabisaItem> result;
+            IEnumerable<BloodPressureItem> result;
 
             try
             {
@@ -71,7 +33,7 @@ namespace Dummy.Service.Diabisa.Repositories
                 {
                     con.Open();
                     SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "spGetDataDiabisa";
+                    cmd.CommandText = "spGet_BloodPressure";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 0;
 
@@ -81,15 +43,15 @@ namespace Dummy.Service.Diabisa.Repositories
                     }
 
                     result = (from DataRow dr in dt.Tables[0].Rows
-                              select new DiabisaItem()
+                              select new BloodPressureItem()
                               {
                                   id = (int)dr["id"],
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
-                                  period = dr["period"].ToString(),
-                                  value = (int)dr["value"],
+                                  type = dr["type"].ToString(),
+                                  sytole = Convert.ToSingle(dr["sytole"]),
+                                  diastole = Convert.ToSingle(dr["diastole"]),
                                   status = dr["status"].ToString(),
-                                  target = dr["target"].ToString(),
                                   check_date = dr["check_date"].ToString(),
                                   check_time = dr["check_time"].ToString(),
                                   created_date = DateTime.Parse(dr["created_date"].ToString())
@@ -101,6 +63,54 @@ namespace Dummy.Service.Diabisa.Repositories
             {
                 throw ex;
             }
+            return result;
+        }
+
+        public IEnumerable<BloodPressureItem> Filter_BloodPressure_ByDate(ParamFilterDateRange param_date)
+        {
+            DataSet dt = new DataSet();
+            IEnumerable<BloodPressureItem> result;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spFilter_BloodPressure_ByDate";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+
+                    cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    result = (from DataRow dr in dt.Tables[0].Rows
+                              select new BloodPressureItem()
+                              {
+                                  id = (int)dr["id"],
+                                  method = dr["method"].ToString(),
+                                  method_details = dr["method_details"].ToString(),
+                                  type = dr["type"].ToString(),
+                                  sytole = Convert.ToSingle(dr["sytole"]),
+                                  diastole = Convert.ToSingle(dr["diastole"]),
+                                  status = dr["status"].ToString(),
+                                  check_date = dr["check_date"].ToString(),
+                                  check_time = dr["check_time"].ToString(),
+                                  created_date = DateTime.Parse(dr["created_date"].ToString())
+                              }).ToList();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
             return result;
         }
     }

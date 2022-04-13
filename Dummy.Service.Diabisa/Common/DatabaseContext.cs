@@ -11,7 +11,7 @@ namespace Dummy.Service.Diabisa.Common
     {
         public DbContextOptions<DatabaseContext> options;
 
-        public DbSet<DiabisaItem> Diabisa_Item_Dataset { get; set; }
+        public DbSet<BloodGlucoseItem> Diabisa_Item_Dataset { get; set; }
 
         public DatabaseContext() : base() { }
 
@@ -23,7 +23,8 @@ namespace Dummy.Service.Diabisa.Common
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // mapping variable to each exist table in database
-            builder.Entity<DiabisaItem>().ToTable("MR_Diabisa").HasKey(dia => new { dia.id });
+            builder.Entity<BloodGlucoseItem>().ToTable("MR_BloodGlucose").HasKey(dia => new { dia.id });
+            builder.Entity<BloodPressureItem>().ToTable("MR_BloodPressure").HasKey(dia => new { dia.id });
       
             base.OnModelCreating(builder);
         }
