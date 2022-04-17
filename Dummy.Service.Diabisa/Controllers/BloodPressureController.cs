@@ -129,5 +129,43 @@ namespace Dummy.Service.Diabisa.Controllers
 
             return HttpResponse(HttpResults);
         }
+
+        [HttpGet("FilterBloodPressure")]
+        [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
+        public IActionResult GetFilterBloodGlucose([FromQuery] ParamFilterBloodPressure filter_param)
+        {
+            int total = 0;
+
+            try
+            {
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_BloodPressureFilter(filter_param);
+                total = result.Count();
+
+                if (total != 0)
+                {
+                    HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get all bata blood pressure", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood pressure data not available", total);
+                }
+            }
+            catch (Exception exx)
+            {
+                int exCode = exx.HResult;
+
+                if (exCode == -2147467259)
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
+                }
+            }
+
+            return HttpResponse(HttpResults);
+        }
     }
 }

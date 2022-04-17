@@ -12,5 +12,6 @@ namespace Dummy.Service.Diabisa.Repositories.IRepositories
         IEnumerable<BloodPressureItem> GetAll_BloodPressure();
         IEnumerable<BloodPressureItem> GetData_BloodPressure_ByPatient(int patient_id);
         IEnumerable<BloodPressureItem> Filter_BloodPressure_ByDate(ParamFilterDateRange param_date);
+        IEnumerable<BloodPressureItem> Filter_BloodPressureFilter(ParamFilterBloodPressure filter_param);
     }
 }
