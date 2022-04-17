@@ -46,10 +46,11 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new BloodPressureItem()
                               {
                                   id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
+                                  type = dr["type"].ToString(),
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
-                                  type = dr["type"].ToString(),
-                                  sytole = Convert.ToSingle(dr["sytole"]),
+                                  systole = Convert.ToSingle(dr["systole"]),
                                   diastole = Convert.ToSingle(dr["diastole"]),
                                   status = dr["status"].ToString(),
                                   check_date = dr["check_date"].ToString(),
@@ -59,7 +60,7 @@ namespace Dummy.Service.Diabisa.Repositories
                     con.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
                 throw ex;
             }
@@ -93,10 +94,11 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new BloodPressureItem()
                               {
                                   id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
+                                  type = dr["type"].ToString(),
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
-                                  type = dr["type"].ToString(),
-                                  sytole = Convert.ToSingle(dr["sytole"]),
+                                  systole = Convert.ToSingle(dr["systole"]),
                                   diastole = Convert.ToSingle(dr["diastole"]),
                                   status = dr["status"].ToString(),
                                   check_date = dr["check_date"].ToString(),
@@ -111,6 +113,53 @@ namespace Dummy.Service.Diabisa.Repositories
                 throw ex;
             }
 
+            return result;
+        }
+
+        public IEnumerable<BloodPressureItem> GetData_BloodPressure_ByPatient(int patient_id)
+        {
+            DataSet dt = new DataSet();
+            IEnumerable<BloodPressureItem> result;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spGet_BloodPressure_ByPatient";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+
+                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    result = (from DataRow dr in dt.Tables[0].Rows
+                              select new BloodPressureItem()
+                              {
+                                  id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
+                                  type = dr["type"].ToString(),
+                                  method = dr["method"].ToString(),
+                                  method_details = dr["method_details"].ToString(),
+                                  systole = Convert.ToSingle(dr["systole"]),
+                                  diastole = Convert.ToSingle(dr["diastole"]),
+                                  status = dr["status"].ToString(),
+                                  check_date = dr["check_date"].ToString(),
+                                  check_time = dr["check_time"].ToString(),
+                                  created_date = DateTime.Parse(dr["created_date"].ToString())
+                              }).ToList();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return result;
         }
     }

@@ -55,6 +55,44 @@ namespace Dummy.Service.Diabisa.Controllers
             return HttpResponse(HttpResults);
         }
 
+        [HttpGet("BloodPressure/{patientId}")]
+        [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
+        public IActionResult GetBloodPressureByPatient(int patientId)
+        {
+            int total = 0;
+
+            try
+            {
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().GetData_BloodPressure_ByPatient(patientId);
+                total = result.Count();
+
+                if (total != 0)
+                {
+                    HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get All Data Blood Pressure", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood pressure data not available", total);
+                }
+            }
+            catch (Exception exx)
+            {
+                int exCode = exx.HResult;
+
+                if (exCode == -2147467259)
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
+                }
+            }
+
+            return HttpResponse(HttpResults);
+        }
+
         [HttpGet("FilterBloodPressureBydate")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
         public IActionResult GetFilterBloodGlucose_ByDate([FromQuery]ParamFilterDateRange param_date)

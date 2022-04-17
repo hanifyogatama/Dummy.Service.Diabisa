@@ -64,7 +64,7 @@ namespace Dummy.Service.Diabisa.Controllers
 
         [HttpGet("GetAllBloodGlucose")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
-        public IActionResult GetAllDiabisa()
+        public IActionResult GetAllBloodGlucose()
         {
             int total = 0;
 
@@ -100,9 +100,47 @@ namespace Dummy.Service.Diabisa.Controllers
             return HttpResponse(HttpResults);
         }
 
+        [HttpGet("GetBloodGlucose/{patientId}")]
+        [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
+        public IActionResult GetBloodGlucoseByPatient(int patientId)
+        {
+            int total = 0;
+
+            try
+            {
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().GetData_BloodGlucose_ByPatient(patientId);
+                total = result.Count();
+
+                if (total != 0)
+                {
+                    HttpResults = new ResponseData<IEnumerable<BloodGlucoseItem>>("Get All Data Blood Glucose", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood glucose data not available", total);
+                }
+            }
+            catch (Exception exx)
+            {
+                int exCode = exx.HResult;
+
+                if (exCode == -2147467259)
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
+                }
+                else
+                {
+                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
+                }
+            }
+
+            return HttpResponse(HttpResults);
+        }
+
         [HttpGet("FilterBloodGlucose")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
-        public IActionResult GetFilterBloodGlucose(ParamFilterBloodGlucose filter_param)
+        public IActionResult GetFilterBloodGlucose([FromQuery]ParamFilterBloodGlucose filter_param)
         {
             int total = 0;
 
@@ -140,13 +178,13 @@ namespace Dummy.Service.Diabisa.Controllers
 
         [HttpGet("FilterBloodGlucoseBydate")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
-        public IActionResult GetFilterBloodGlucose_ByDate(ParamFilterDateRange param_date)
+        public IActionResult GetFilterBloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
         {
             int total = 0;
 
             try
             {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_BloodGlucose_ByDate(param_date);
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_BloodGlucose_ByDate(param_date, patient_id);
                 total = result.Count();
                 if (total != 0)
                 {

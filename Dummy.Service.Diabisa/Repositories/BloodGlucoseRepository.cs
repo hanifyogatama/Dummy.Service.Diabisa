@@ -85,13 +85,15 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new BloodGlucoseItem()
                               {
                                   id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
                                   type = dr["type"].ToString(),
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
                                   period = dr["period"].ToString(),
                                   value = Convert.ToSingle(dr["value"]),
                                   status = dr["status"].ToString(),
-                                  target = dr["target"].ToString(),
+                                  target_min = Convert.ToSingle(dr["target_min"]),
+                                  target_max = Convert.ToSingle(dr["target_max"]),
                                   check_date = dr["check_date"].ToString(),
                                   check_time = dr["check_time"].ToString(),
                                   created_date = DateTime.Parse(dr["created_date"].ToString())
@@ -121,24 +123,12 @@ namespace Dummy.Service.Diabisa.Repositories
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 0;
 
+                    cmd.Parameters.Add(new SqlParameter("patient_id", filter_param.patient_id));
                     cmd.Parameters.Add(new SqlParameter("start_date", filter_param.start_date));
                     cmd.Parameters.Add(new SqlParameter("end_date", filter_param.end_date));
-                    cmd.Parameters.Add(new SqlParameter("type_1", filter_param.type_1));
-                    cmd.Parameters.Add(new SqlParameter("type_2", filter_param.type_2));
-
-                    cmd.Parameters.Add(new SqlParameter("method_1", filter_param.method_1));
-                    cmd.Parameters.Add(new SqlParameter("method_2", filter_param.method_2));
-                    cmd.Parameters.Add(new SqlParameter("method_3", filter_param.method_3));
-                    cmd.Parameters.Add(new SqlParameter("method_4", filter_param.method_4));
-                    cmd.Parameters.Add(new SqlParameter("method_5", filter_param.method_5));
-                    cmd.Parameters.Add(new SqlParameter("method_6", filter_param.method_6));
-                    cmd.Parameters.Add(new SqlParameter("method_7", filter_param.method_7));
-
-                    cmd.Parameters.Add(new SqlParameter("status_1", filter_param.status_1));
-                    cmd.Parameters.Add(new SqlParameter("status_2", filter_param.status_2));
-                    cmd.Parameters.Add(new SqlParameter("status_3", filter_param.status_3));
-                    cmd.Parameters.Add(new SqlParameter("status_4", filter_param.status_4));
-                    cmd.Parameters.Add(new SqlParameter("status_5", filter_param.status_5));
+                    cmd.Parameters.Add(new SqlParameter("type", filter_param.type));
+                    cmd.Parameters.Add(new SqlParameter("method", filter_param.method));
+                    cmd.Parameters.Add(new SqlParameter("status", filter_param.status));
 
                     using (var da = new SqlDataAdapter(cmd))
                     {
@@ -149,13 +139,15 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new BloodGlucoseItem()
                               {
                                   id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
                                   type = dr["type"].ToString(),
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
                                   period = dr["period"].ToString(),
                                   value = Convert.ToSingle(dr["value"]),
                                   status = dr["status"].ToString(),
-                                  target = dr["target"].ToString(),
+                                  target_min = Convert.ToSingle(dr["target_min"]),
+                                  target_max = Convert.ToSingle(dr["target_max"]),
                                   check_date = dr["check_date"].ToString(),
                                   check_time = dr["check_time"].ToString(),
                                   created_date = DateTime.Parse(dr["created_date"].ToString())
@@ -171,7 +163,7 @@ namespace Dummy.Service.Diabisa.Repositories
             return result;
         }
 
-        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date)
+        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
         {
             DataSet dt = new DataSet();
             IEnumerable<BloodGlucoseItem> result;
@@ -193,8 +185,8 @@ namespace Dummy.Service.Diabisa.Repositories
 
                     cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
                     cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
+                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
                    
-
                     using (var da = new SqlDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -204,13 +196,15 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new BloodGlucoseItem()
                               {
                                   id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
                                   type = dr["type"].ToString(),
                                   method = dr["method"].ToString(),
                                   method_details = dr["method_details"].ToString(),
                                   period = dr["period"].ToString(),
                                   value = Convert.ToSingle(dr["value"]),
                                   status = dr["status"].ToString(),
-                                  target = dr["target"].ToString(),
+                                  target_min = Convert.ToSingle(dr["target_min"]),
+                                  target_max = Convert.ToSingle(dr["target_max"]),
                                   check_date = dr["check_date"].ToString(),
                                   check_time = dr["check_time"].ToString(),
                                   created_date = DateTime.Parse(dr["created_date"].ToString())
@@ -223,6 +217,55 @@ namespace Dummy.Service.Diabisa.Repositories
                 throw ex;
             }
 
+            return result;
+        }
+
+        public IEnumerable<BloodGlucoseItem> GetData_BloodGlucose_ByPatient(int patient_id)
+        {
+            DataSet dt = new DataSet();
+            IEnumerable<BloodGlucoseItem> result;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spGet_BloodGlucose_ByPatient";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+
+                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    result = (from DataRow dr in dt.Tables[0].Rows
+                              select new BloodGlucoseItem()
+                              {
+                                  id = (int)dr["id"],
+                                  patient_id = (int)dr["patient_id"],
+                                  type = dr["type"].ToString(),
+                                  method = dr["method"].ToString(),
+                                  method_details = dr["method_details"].ToString(),
+                                  period = dr["period"].ToString(),
+                                  value = Convert.ToSingle(dr["value"]),
+                                  status = dr["status"].ToString(),
+                                  target_min = Convert.ToSingle(dr["target_min"]),
+                                  target_max = Convert.ToSingle(dr["target_max"]),
+                                  check_date = dr["check_date"].ToString(),
+                                  check_time = dr["check_time"].ToString(),
+                                  created_date = DateTime.Parse(dr["created_date"].ToString())
+                              }).ToList();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return result;
         }
     }

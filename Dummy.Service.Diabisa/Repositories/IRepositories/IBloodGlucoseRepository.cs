@@ -11,7 +11,8 @@ namespace Dummy.Service.Diabisa.Repositories.IRepositories
     {
         ParamAddBloodGlucose AddData_BloodGlucose(ParamAddBloodGlucose create_param);
         IEnumerable<BloodGlucoseItem> GetAll_BloodGlucose();
-        IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date);
+        IEnumerable<BloodGlucoseItem> GetData_BloodGlucose_ByPatient(int patient_id);
+        IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id);
         IEnumerable<BloodGlucoseItem> Filter_BloodGlucose(ParamFilterBloodGlucose filter_param);
 
 
