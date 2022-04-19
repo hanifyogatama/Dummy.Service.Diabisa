@@ -25,7 +25,8 @@ namespace Dummy.Service.Diabisa.Common
             // mapping variable to each exist table in database
             builder.Entity<BloodGlucoseItem>().ToTable("MR_BloodGlucose").HasKey(bg => new { bg.id });
             builder.Entity<BloodPressureItem>().ToTable("MR_BloodPressure").HasKey(bp => new { bp.id });
-            builder.Entity<ChartBloodGlucosecs>().ToTable("CHRT_BloodGlucose").HasKey(cbg => new { cbg.id });
+            builder.Entity<ChartBloodGlucose>().ToTable("CHRT_BloodGlucose").HasKey(cbg => new { cbg.id });
+            builder.Entity<ChartBloodPressure>().ToTable("CHRT_BloodPressure").HasKey(cbp => new { cbp.id });
       
             base.OnModelCreating(builder);
         }

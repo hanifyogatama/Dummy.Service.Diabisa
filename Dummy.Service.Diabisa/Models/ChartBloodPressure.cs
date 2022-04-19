@@ -5,15 +5,13 @@ using System.Threading.Tasks;
 
 namespace Dummy.Service.Diabisa.Models
 {
-    public class ChartBloodGlucosecs
+    public class ChartBloodPressure
     {
         public int id { get; set; }
-        public int patient_id { get; set; }
+        public string chart_type { get; set; }
+        public string method { get; set; }
         public float value { get; set; }
-        public float average { get; set; }
-        public float min_value { get; set; }
-        public float max_value { get; set; }
         public string measurement { get; set; }
-        public DateTime created_date { get; set; }
+        public string check_date { get; set; }
     }
 }

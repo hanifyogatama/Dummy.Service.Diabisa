@@ -93,19 +93,57 @@ namespace Dummy.Service.Diabisa.Controllers
             return HttpResponse(HttpResults);
         }
 
-        [HttpGet("FilterBloodPressureBydate")]
+        //[HttpGet("FilterBloodPressureBydate")]
+        //[ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
+        //public IActionResult GetFilterBloodGlucose_ByDate([FromQuery]ParamFilterDateRange param_date)
+        //{
+        //    int total = 0;
+
+        //    try
+        //    {
+        //        var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_BloodPressure_ByDate(param_date);
+        //        total = result.Count();
+        //        if (total != 0)
+        //        {
+        //            HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get Data Blood Pressure by range date", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood pressure data not available", total);
+        //        }
+        //    }
+        //    catch (Exception exx)
+        //    {
+        //        int exCode = exx.HResult;
+
+        //        if (exCode == -2147467259)
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
+        //        }
+        //    }
+
+        //    return HttpResponse(HttpResults);
+        //}
+
+        [HttpGet("FilterBloodPressure")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
-        public IActionResult GetFilterBloodGlucose_ByDate([FromQuery]ParamFilterDateRange param_date)
+        public IActionResult GetFilterBloodGlucose([FromQuery] ParamFilterBloodPressure filter_param)
         {
             int total = 0;
 
             try
             {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_BloodPressure_ByDate(param_date);
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_BloodPressureFilter(filter_param);
                 total = result.Count();
+
                 if (total != 0)
                 {
-                    HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get Data Blood Pressure by range date", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+                    HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get all bata blood pressure", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
 
                 }
                 else
@@ -130,20 +168,19 @@ namespace Dummy.Service.Diabisa.Controllers
             return HttpResponse(HttpResults);
         }
 
-        [HttpGet("FilterBloodPressure")]
-        [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodPressureItem>>), 200)]
-        public IActionResult GetFilterBloodGlucose([FromQuery] ParamFilterBloodPressure filter_param)
+        [HttpGet("FilterChartBP")]
+        [ProducesResponseType(typeof(ResponseData<IEnumerable<ChartCoordinateBloodPressure>>), 200)]
+        public IActionResult FilterChart_BloodPressure(ParamFilterChartBloodPressure param_filter)
         {
             int total = 0;
 
             try
             {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_BloodPressureFilter(filter_param);
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodPressure().Filter_ChartBloodPressure(param_filter);
                 total = result.Count();
-
                 if (total != 0)
                 {
-                    HttpResults = new ResponseData<IEnumerable<BloodPressureItem>>("Get all bata blood pressure", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+                    HttpResults = new ResponseData<IEnumerable<ChartCoordinateBloodPressure>>("Get Data Blood Pressure by range date", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
 
                 }
                 else

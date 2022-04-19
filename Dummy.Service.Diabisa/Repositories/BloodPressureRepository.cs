@@ -214,5 +214,50 @@ namespace Dummy.Service.Diabisa.Repositories
 
             return result;
         }
+
+        public IEnumerable<ChartCoordinateBloodPressure> Filter_ChartBloodPressure(ParamFilterChartBloodPressure filter_param)
+        {
+            DataSet dt = new DataSet();
+            IEnumerable<ChartCoordinateBloodPressure> result;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spFilter_Chart_BloodPressure";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+
+                    cmd.Parameters.Add(new SqlParameter("patient_id", filter_param.patient_id));
+                    cmd.Parameters.Add(new SqlParameter("start_date", filter_param.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", filter_param.end_date));
+                    cmd.Parameters.Add(new SqlParameter("method", filter_param.method));
+                  
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    result = (from DataRow dr in dt.Tables[0].Rows
+                              select new ChartCoordinateBloodPressure()
+                              {
+                                  method = dr["method"].ToString(),
+                                  chart_type = dr["chart_type"].ToString(),
+                                  y = Convert.ToSingle(dr["y"]),  
+                                  x = dr["x"].ToString()
+                              }).ToList();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }
