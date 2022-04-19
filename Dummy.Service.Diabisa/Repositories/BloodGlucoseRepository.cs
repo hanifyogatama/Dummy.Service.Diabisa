@@ -268,5 +268,51 @@ namespace Dummy.Service.Diabisa.Repositories
             }
             return result;
         }
+
+        public IEnumerable<ChartCoordinate> Filter_ChartAverageBG(ParamFilterDateRange param_date, int patient_id)
+        {
+            DataSet dt = new DataSet();
+            IEnumerable<ChartCoordinate> result;
+
+            // var start_date = filter_param.start_date.GetDateTimeFormats();
+            // var end_date = filter_param.end_date.GetDateTimeFormats();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "spFilter_ChartAverage_BloodGlucose";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+
+                    cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
+                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    result = (from DataRow dr in dt.Tables[0].Rows
+                              select new ChartCoordinate()
+                              {
+                                  chart_type = dr["chart_type"].ToString(),
+                                  y = Convert.ToSingle(dr["y"]),
+                                  x = Convert.ToSingle(dr["x"]),
+                                  created_date = DateTime.Parse(dr["created_date"].ToString())
+                              }).ToList();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

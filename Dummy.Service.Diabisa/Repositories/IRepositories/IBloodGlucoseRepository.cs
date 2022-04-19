@@ -14,7 +14,7 @@ namespace Dummy.Service.Diabisa.Repositories.IRepositories
         IEnumerable<BloodGlucoseItem> GetData_BloodGlucose_ByPatient(int patient_id);
         IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id);
         IEnumerable<BloodGlucoseItem> Filter_BloodGlucose(ParamFilterBloodGlucose filter_param);
-
+        IEnumerable<ChartCoordinate> Filter_ChartAverageBG(ParamFilterDateRange param_date, int patient_id);
 
     }
 }

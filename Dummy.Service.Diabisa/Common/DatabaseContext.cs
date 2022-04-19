@@ -23,8 +23,9 @@ namespace Dummy.Service.Diabisa.Common
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // mapping variable to each exist table in database
-            builder.Entity<BloodGlucoseItem>().ToTable("MR_BloodGlucose").HasKey(dia => new { dia.id });
-            builder.Entity<BloodPressureItem>().ToTable("MR_BloodPressure").HasKey(dia => new { dia.id });
+            builder.Entity<BloodGlucoseItem>().ToTable("MR_BloodGlucose").HasKey(bg => new { bg.id });
+            builder.Entity<BloodPressureItem>().ToTable("MR_BloodPressure").HasKey(bp => new { bp.id });
+            builder.Entity<ChartBloodGlucosecs>().ToTable("CHRT_BloodGlucose").HasKey(cbg => new { cbg.id });
       
             base.OnModelCreating(builder);
         }
