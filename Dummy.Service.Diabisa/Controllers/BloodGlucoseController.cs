@@ -17,50 +17,50 @@ namespace Dummy.Service.Diabisa.Controllers
     {
         public BloodGlucoseController(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        [HttpPost("AddBloodGlucose")]
-        [ProducesResponseType(typeof(ResponseData<ParamAddBloodGlucose>), 200)]
-        public IActionResult Register([FromBody] ParamAddBloodGlucose create_param)
-        {
+        //[HttpPost("AddBloodGlucose")]
+        //[ProducesResponseType(typeof(ResponseData<ParamAddBloodGlucose>), 200)]
+        //public IActionResult Register([FromBody] ParamAddBloodGlucose create_param)
+        //{
 
-            int total = 0;
+        //    int total = 0;
 
-            if (create_param == null)
-            {
-                HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
-                goto response;
-            }
+        //    if (create_param == null)
+        //    {
+        //        HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
+        //        goto response;
+        //    }
 
-            try
-            {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().AddData_BloodGlucose(create_param);
-                if (result != null)
-                {
-                    HttpResults = new ResponseData<ParamAddBloodGlucose>("Data successfully created", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, create_param);
-                }
-                else
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
+        //    try
+        //    {
+        //        var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().AddData_BloodGlucose(create_param);
+        //        if (result != null)
+        //        {
+        //            HttpResults = new ResponseData<ParamAddBloodGlucose>("Data successfully created", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, create_param);
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.BadRequest, StatusMessage.Fail, HttpResponseMessageKey.DataUnsuccessfullyCreated, total);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                int exCode = ex.HResult;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        int exCode = ex.HResult;
 
-                if (exCode == -2147467259)
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, ex.Message, total);
-                }
-                else
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, ex.Message, total);
-                }
-            }
+        //        if (exCode == -2147467259)
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, ex.Message, total);
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, ex.Message, total);
+        //        }
+        //    }
 
-        response:
-            return HttpResponse(HttpResults);
+        //response:
+        //    return HttpResponse(HttpResults);
 
-        }
+        //}
 
         [HttpGet("GetAllBloodGlucose")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
@@ -176,42 +176,42 @@ namespace Dummy.Service.Diabisa.Controllers
             return HttpResponse(HttpResults);
         }
 
-        [HttpGet("FilterBloodGlucoseBydate")]
-        [ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
-        public IActionResult FilterBloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
-        {
-            int total = 0;
+        //[HttpGet("FilterBloodGlucoseBydate")]
+        //[ProducesResponseType(typeof(ResponseData<IEnumerable<BloodGlucoseItem>>), 200)]
+        //public IActionResult FilterBloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
+        //{
+        //    int total = 0;
 
-            try
-            {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_BloodGlucose_ByDate(param_date, patient_id);
-                total = result.Count();
-                if (total != 0)
-                {
-                    HttpResults = new ResponseData<IEnumerable<BloodGlucoseItem>>("Get Data Blood Glucose by range date", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
+        //    try
+        //    {
+        //        var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_BloodGlucose_ByDate(param_date, patient_id);
+        //        total = result.Count();
+        //        if (total != 0)
+        //        {
+        //            HttpResults = new ResponseData<IEnumerable<BloodGlucoseItem>>("Get Data Blood Glucose by range date", Siloam.System.Web.StatusCode.OK, StatusMessage.Success, result);
 
-                }
-                else
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood glucose data not available", total);
-                }
-            }
-            catch (Exception exx)
-            {
-                int exCode = exx.HResult;
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.OK, StatusMessage.Fail, "blood glucose data not available", total);
+        //        }
+        //    }
+        //    catch (Exception exx)
+        //    {
+        //        int exCode = exx.HResult;
 
-                if (exCode == -2147467259)
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
-                }
-                else
-                {
-                    HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
-                }
-            }
+        //        if (exCode == -2147467259)
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.InternalServerErrorException, StatusMessage.Error, exx.Message, total);
+        //        }
+        //        else
+        //        {
+        //            HttpResults = new ResponseMessage(Siloam.System.Web.StatusCode.UnprocessableEntity, StatusMessage.Fail, exx.Message, total);
+        //        }
+        //    }
 
-            return HttpResponse(HttpResults);
-        }
+        //    return HttpResponse(HttpResults);
+        //}
 
         [HttpGet("FilterChartAvgBG")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<ChartCoordinate>>), 200)]
