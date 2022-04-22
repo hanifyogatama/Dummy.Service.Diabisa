@@ -12,10 +12,10 @@ namespace Dummy.Service.Diabisa.Models.ViewModels
         public DateTime end_date { get; set; }
         public string method { get; set; }
 
-        public ParamFilterChartBloodPressure()
-        {
-            method = "";
-        }
+        //public ParamFilterChartBloodPressure()
+        //{
+        //    method = "";
+        //}
     }
 
    

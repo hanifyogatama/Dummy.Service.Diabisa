@@ -14,12 +14,5 @@ namespace Dummy.Service.Diabisa.Models.ViewModels
         public string method { get; set; }
         public string status { get; set; }
 
-        public ParamFilterBloodGlucose()
-        {
-            type = "";
-            method = "";
-            status = "";
-        }
-
     }
 }

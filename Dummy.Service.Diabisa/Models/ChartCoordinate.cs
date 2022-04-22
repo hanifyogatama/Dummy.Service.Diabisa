@@ -8,8 +8,8 @@ namespace Dummy.Service.Diabisa.Models
     public class ChartCoordinate
     {
         public string chart_type { get; set; }
+        public string method { get; set; }
         public float y { get; set; }
-        public float x { get; set; }
-        public DateTime created_date { get; set; }
+        public string x { get; set; }
     }
 }

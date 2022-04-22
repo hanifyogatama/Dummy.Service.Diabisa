@@ -213,15 +213,15 @@ namespace Dummy.Service.Diabisa.Controllers
         //    return HttpResponse(HttpResults);
         //}
 
-        [HttpGet("FilterChartAvgBG")]
+        [HttpGet("FilterChartBloodGlucose")]
         [ProducesResponseType(typeof(ResponseData<IEnumerable<ChartCoordinate>>), 200)]
-        public IActionResult FilterChart_AvgBloodGlucose(ParamFilterDateRange param_date, int patient_id)
+        public IActionResult FilterChart_AvgBloodGlucose(ParamFilterChart filter_param)
         {
             int total = 0;
 
             try
             {
-                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_ChartAverageBG(param_date, patient_id);
+                var result = IUnitOfWorks.UnifOfWork_ms_BloodGlucose().Filter_ChartBloodGlucose(filter_param);
                 total = result.Count();
                 if (total != 0)
                 {

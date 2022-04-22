@@ -108,28 +108,30 @@ namespace Dummy.Service.Diabisa.Repositories
             return result;
         }
 
-        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose(ParamFilterBloodGlucose filter_param)
+        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
         {
             DataSet dt = new DataSet();
             IEnumerable<BloodGlucoseItem> result;
 
+            //var start_date = startDate;
+            //var start_date = new DateTime(startDate.Year, startDate.Month, startDate.Day);
+            //var end_date = new DateTime(endDate.Year, endDate.Month, endDate.Day);
+            //var end_date = endDate.Date;
+          
             try
             {
-                using(SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
                 {
                     con.Open();
                     SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "spFilter_BloodGlucose_DateTypeMethodStatus";
+                    cmd.CommandText = "spFilter_BloodGlucose_ByDate";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 0;
 
-                    cmd.Parameters.Add(new SqlParameter("patient_id", filter_param.patient_id));
-                    cmd.Parameters.Add(new SqlParameter("start_date", filter_param.start_date));
-                    cmd.Parameters.Add(new SqlParameter("end_date", filter_param.end_date));
-                    cmd.Parameters.Add(new SqlParameter("type", filter_param.type));
-                    cmd.Parameters.Add(new SqlParameter("method", filter_param.method));
-                    cmd.Parameters.Add(new SqlParameter("status", filter_param.status));
-
+                    cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
+                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
+                   
                     using (var da = new SqlDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -163,30 +165,28 @@ namespace Dummy.Service.Diabisa.Repositories
             return result;
         }
 
-        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose_ByDate(ParamFilterDateRange param_date, int patient_id)
+        public IEnumerable<BloodGlucoseItem> Filter_BloodGlucose(ParamFilterBloodGlucose filter_param)
         {
             DataSet dt = new DataSet();
             IEnumerable<BloodGlucoseItem> result;
 
-            //var start_date = startDate;
-            //var start_date = new DateTime(startDate.Year, startDate.Month, startDate.Day);
-            //var end_date = new DateTime(endDate.Year, endDate.Month, endDate.Day);
-            //var end_date = endDate.Date;
-          
             try
             {
-                using (SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
+                using(SqlConnection con = new SqlConnection(Siloam.System.ApplicationSetting.ConnectionString))
                 {
                     con.Open();
                     SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "spFilter_BloodGlucose_ByDate";
+                    cmd.CommandText = "spFilter_BloodGlucose_DateTypeMethodStatus";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 0;
 
-                    cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
-                    cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
-                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
-                   
+                    cmd.Parameters.Add(new SqlParameter("patient_id", filter_param.patient_id));
+                    cmd.Parameters.Add(new SqlParameter("start_date", filter_param.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", filter_param.end_date));
+                    cmd.Parameters.Add(new SqlParameter("type", filter_param.type));
+                    cmd.Parameters.Add(new SqlParameter("method", filter_param.method));
+                    cmd.Parameters.Add(new SqlParameter("status", filter_param.status));
+
                     using (var da = new SqlDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -269,7 +269,7 @@ namespace Dummy.Service.Diabisa.Repositories
             return result;
         }
 
-        public IEnumerable<ChartCoordinate> Filter_ChartAverageBG(ParamFilterDateRange param_date, int patient_id)
+        public IEnumerable<ChartCoordinate> Filter_ChartBloodGlucose(ParamFilterChart filter_param)
         {
             DataSet dt = new DataSet();
             IEnumerable<ChartCoordinate> result;
@@ -283,13 +283,14 @@ namespace Dummy.Service.Diabisa.Repositories
                 {
                     con.Open();
                     SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "spFilter_ChartAverage_BloodGlucose";
+                    cmd.CommandText = "spFilter_ChartCoordinate_BloodGlucose";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandTimeout = 0;
 
-                    cmd.Parameters.Add(new SqlParameter("start_date", param_date.start_date));
-                    cmd.Parameters.Add(new SqlParameter("end_date", param_date.end_date));
-                    cmd.Parameters.Add(new SqlParameter("patient_id", patient_id));
+                    cmd.Parameters.Add(new SqlParameter("patient_id", filter_param.patient_id));
+                    cmd.Parameters.Add(new SqlParameter("start_date", filter_param.start_date));
+                    cmd.Parameters.Add(new SqlParameter("end_date", filter_param.end_date));
+                    cmd.Parameters.Add(new SqlParameter("method", filter_param.method));
 
                     using (var da = new SqlDataAdapter(cmd))
                     {
@@ -300,9 +301,9 @@ namespace Dummy.Service.Diabisa.Repositories
                               select new ChartCoordinate()
                               {
                                   chart_type = dr["chart_type"].ToString(),
+                                  method = dr["method"].ToString(),
                                   y = Convert.ToSingle(dr["y"]),
-                                  x = Convert.ToSingle(dr["x"]),
-                                  created_date = DateTime.Parse(dr["created_date"].ToString())
+                                  x = dr["x"].ToString(),
                               }).ToList();
                     con.Close();
                 }
